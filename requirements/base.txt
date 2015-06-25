@@ -1,4 +1,8 @@
+click==4.0
 Django==1.8.2
 jsonfield==1.0.3
-multigtfs==0.4.3
+git+https://github.com/powersurge360/django-multi-gtfs@feature/django-1.7-upgrade
+psycopg2==2.6.1
+python-dotenv==0.1.2
 wheel==0.24.0
+python-dotenv==0.1.2

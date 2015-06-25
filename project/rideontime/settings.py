@@ -13,8 +13,12 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+from dotenv import load_dotenv
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_DIR = os.path.join(BASE_DIR, '../')
+
+load_dotenv(os.path.join(BASE_DIR, 'rideontime', '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -84,8 +88,10 @@ WSGI_APPLICATION = 'rideontime.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
-        'NAME': os.path.join(PROJECT_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'rideontime',
+        'USER': os.environ.get('DATABASE_USER', 'rideontime'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', None),
     }
 }
 
