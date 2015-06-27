@@ -1,17 +1,21 @@
 from django.db import models
+from django.contrib.gis.db.models.query import GeoQuerySet
 
 from multigtfs.models import Stop
 
 
-class StopQuerySet(models.QuerySet):
+class StopProxyQuerySet(GeoQuerySet):
     def belonging_to_feed(self, feed):
         return self.filter(
             feed=feed
         )
 
+    def active(self):
+        return self.all()
 
-class RideOnTimeStop(Stop):
+
+class StopProxy(Stop):
     class Meta:
         proxy = True
 
-    objects = StopQuerySet.as_manager()
+    objects = StopProxyQuerySet.as_manager()

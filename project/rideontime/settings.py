@@ -46,6 +46,7 @@ INSTALLED_APPS = (
 
     # Third party apps
     'multigtfs',
+    'rest_framework',
 
     # Our apps
     'apps.api',

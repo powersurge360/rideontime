@@ -1,15 +1,15 @@
 import factory
 from multigtfs.models import Feed
 
-from ..models import RideOnTimeStop
+from ..models import StopProxy
 
 class FeedFactory(factory.DjangoModelFactory):
     class Meta:
         model = Feed
 
 
-class RideOnTimeStopFactory(factory.DjangoModelFactory):
+class StopProxyFactory(factory.DjangoModelFactory):
     class Meta:
-        model = RideOnTimeStop
+        model = StopProxy
 
     feed = factory.SubFactory(FeedFactory)
