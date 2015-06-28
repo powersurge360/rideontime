@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.test import TestCase
 
@@ -165,6 +165,23 @@ class TestServiceProxyQuerySet(TestCase):
         with self.assertNumQueries(1):
             for item in ServiceProxy.objects.active():
                 pass
+
+    def test_active_accounts_for_day(self):
+        ServiceProxy.objects.all().delete()
+
+        days = ('monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+                'saturday', 'sunday')
+
+        services = [
+            ServiceProxyFactory.create(**{day: True})
+            for day in days
+        ]
+
+        relevant_date = services[0].start_date
+
+        for i in range(0, 6):
+            with freeze_time(relevant_date + timedelta(days=i)):
+                self.assertEqual(ServiceProxy.objects.active().count(), 1)
 
     def test_for_day_grabs_correct_feeds(self):
         ServiceProxy.objects.all().delete()
