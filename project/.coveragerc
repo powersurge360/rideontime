@@ -1,0 +1,3 @@
+[run]
+source = apps
+omit = apps/api/serializers.py,apps/api/urls.py

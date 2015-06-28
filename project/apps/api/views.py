@@ -6,6 +6,13 @@ from .serializers import StopProxySerializer
 
 
 class StopProxyListAPIView(ListAPIView):
+    '''Retrieves all active stops for today and paginates per 100 entries.
+
+    Accepts the following GET arguments:
+
+    * dist: The distance in meters from a given point
+    * point: A given point in long, lat format
+    '''
     queryset = StopProxy.objects.active()
     serializer_class = StopProxySerializer
     paginate_by = 100
