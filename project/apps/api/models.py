@@ -57,7 +57,7 @@ class ServiceProxyQuerySet(GeoQuerySet):
         elif today_num == 5:
             active_services = active_services.for_day('saturday')
         elif today_num == 6:
-            active_services = active_services.for_day('saturday')
+            active_services = active_services.for_day('sunday')
 
         return active_services
 
