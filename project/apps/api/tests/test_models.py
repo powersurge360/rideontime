@@ -104,8 +104,8 @@ class TestStopProxyQuerySet(TestCase):
         )
 
     @freeze_time('1970-01-20')
-    def test_active_does_two_queries(self):
-        with self.assertNumQueries(2):
+    def test_active_does_one_query(self):
+        with self.assertNumQueries(1):
             for item in StopProxy.objects.active():
                 pass
 

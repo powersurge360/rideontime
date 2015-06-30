@@ -12,23 +12,16 @@ class StopProxyQuerySet(GeoQuerySet):
         )
 
     def active(self):
-        '''Grabs all currently active stops. Makes a call to
-        ServiceProxyQuerySet's active under the hood meaning each use of this
-        query will call at least two round trips to the db
+        '''Grabs all currently active stops.
         '''
         active_services = ServiceProxy.objects.active()
 
         active_stop_ids = (active_services
                            .prefetch_related('trip__stoptime__stop')
                            .distinct('trip__stoptime__stop__id')
-                           .values('trip__stoptime__stop__id'))
+                           .values_list('trip__stoptime__stop__id', flat=True))
 
-        processed_ids = {
-            stop['trip__stoptime__stop__id']
-            for stop in active_stop_ids
-        }
-
-        return self.filter(id__in=processed_ids)
+        return self.filter(id__in=active_stop_ids)
 
 
 class ServiceProxyQuerySet(GeoQuerySet):
