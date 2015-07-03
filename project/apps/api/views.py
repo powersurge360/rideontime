@@ -13,7 +13,7 @@ class StopProxyListAPIView(ListAPIView):
     * dist: The distance in meters from a given point
     * point: A given point in long, lat format
     '''
-    queryset = StopProxy.objects.active()
+    queryset = StopProxy.objects.active().prefetch_related('stoptime_set')
     serializer_class = StopProxySerializer
     paginate_by = 100
     distance_filter_field = 'point'

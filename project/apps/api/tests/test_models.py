@@ -6,7 +6,7 @@ from freezegun import freeze_time
 
 from .factories import (StopProxyFactory, FeedFactory, ServiceProxyFactory,
                         StopTimeProxyFactory, TripProxyFactory)
-from ..models import StopProxy, ServiceProxy
+from ..models import StopProxy, ServiceProxy, StopTimeProxy
 
 
 class TestStopProxyQuerySet(TestCase):
@@ -200,3 +200,45 @@ class TestServiceProxyQuerySet(TestCase):
                 ServiceProxy.objects.for_day(day).count(),
                 1,
             )
+
+
+class TestStopTimeProxyQuerySet(TestCase):
+    def setUp(self):
+        self.future_stop_times = [
+            StopTimeProxyFactory(
+                # 1 PM
+                arrival_time=46800
+            )
+            for i in range(10)
+        ]
+
+        self.past_stop_times = [
+            StopTimeProxyFactory(
+                # 1 AM
+                arrival_time=3600
+            )
+            for i in range(10)
+        ]
+
+    @freeze_time('12:00pm')
+    def test_future_includes_future_stoptimes(self):
+        future_stops = StopTimeProxy.objects.future()
+        self.assertEqual(
+            future_stops.count(),
+            10,
+        )
+
+        self.assertEqual(
+            list(future_stops),
+            self.future_stop_times,
+        )
+
+    def test_future_excludes_future_stoptimes(self):
+        future_stops = StopTimeProxy.objects.future()
+        self.assertEqual(
+            future_stops.count(),
+            10,
+        )
+
+        for stop_time in self.past_stop_times:
+            self.assertNotIn(stop_time, future_stops)

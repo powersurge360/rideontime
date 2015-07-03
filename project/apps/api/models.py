@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib.gis.db.models.query import GeoQuerySet
 
 from multigtfs.models import Stop, Service, StopTime, Trip, Route
+from multigtfs.models.fields.seconds import Seconds
 
 
 class StopProxyQuerySet(GeoQuerySet):
@@ -62,6 +63,19 @@ class ServiceProxyQuerySet(GeoQuerySet):
         return self.filter(**day_kwargs)
 
 
+class StopTimeProxyQuerySet(GeoQuerySet):
+    def future(self):
+        '''Grab all stop times that occur in the future'''
+        now = datetime.now()
+
+        midnight = now.replace(hour=0, minute=0, second=0)
+        seconds = (now - midnight).seconds
+
+        return (self
+                .order_by('arrival_time')
+                .filter(arrival_time__gte=Seconds(seconds)))
+
+
 class StopProxy(Stop):
     class Meta:
         proxy = True
@@ -79,6 +93,8 @@ class ServiceProxy(Service):
 class StopTimeProxy(StopTime):
     class Meta:
         proxy = True
+
+    objects = StopTimeProxyQuerySet.as_manager()
 
 
 class TripProxy(Trip):
