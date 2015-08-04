@@ -233,6 +233,7 @@ class TestStopTimeProxyQuerySet(TestCase):
             self.future_stop_times,
         )
 
+    @freeze_time('12:00pm')
     def test_future_excludes_future_stoptimes(self):
         future_stops = StopTimeProxy.objects.future()
         self.assertEqual(
